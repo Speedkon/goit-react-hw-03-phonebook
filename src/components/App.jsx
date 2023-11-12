@@ -7,6 +7,8 @@ import { Report } from 'notiflix/build/notiflix-report-aio';
 import {Container, Title} from './App.styled'
 
 
+const storageKey = "contact";
+
 export class App extends Component {
   state = {
     contacts: [
@@ -31,6 +33,24 @@ export class App extends Component {
       })
     }
   };
+
+  componentDidMount() {
+    const savedContact = window.localStorage.getItem(storageKey);
+    if (savedContact !== null) {
+      this.setState({
+        contacts: JSON.parse(savedContact),
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      window.localStorage.setItem(
+        storageKey,
+        JSON.stringify(this.state.contacts)
+      );
+    }
+  }
 
   onFilter = value => {
     this.setState({
